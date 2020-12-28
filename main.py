@@ -1,14 +1,15 @@
 import random
 from tkinter import *
-import time
 
+# если в поле введено "yes", то в пароль мы добавляем следующие символы в зависимости от поля
 digits = '0123456789'
 lowercase_letters = 'abcdefghijklmnopqrstuvwxyz'
 uppercase_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-punctuation = '!#$%&*+-=?@^_.!#$%&*+-=?@^_.!#$%&*+-=?@^_.'
-ambiguous_symbols = 'il1Lo0O'
+punctuation = '!#$%&*+-=?@^_.!#$%&*+-=?@^_.'
+ambiguous_symbols = ['I', 'l', '1', 'o', '0', 'O']
 
 
+# проверка того, что в первых двух полях введены цифры
 def isdigit_(a):
     if a.isdecimal():
         return True
@@ -16,20 +17,25 @@ def isdigit_(a):
         return False
 
 
+# проверка того, что в первых двух полях введено yes or no
 def yes_or_no(b):
-    if 'yes' in b or 'no' in b or 'YES' in b or 'NO' in b or 'Yes' in b or 'No' in b:
+    if 'yes' in b or 'no' in b:
         return True
     else:
         return False
 
 
+# действия при клике на кнопку Generate
 def clicked():
+    counter = 0
+    # чтобы удалялись прошлые сгенерированные пароли при каждом новом клике на кнопку Generate
     size = list.size()
     if size != 0:
         list.delete(0, size)
     password = []
 
-    amount_of_psw_value = amount_of_psw_entry.get()
+    # первое поле, в которое должно быть введено число
+    amount_of_psw_value = amount_of_psw_entry.get().lower()
     if len(amount_of_psw_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=1, column=2, sticky="w")
@@ -43,7 +49,8 @@ def clicked():
             lbl_incorrect_psw_entry = Label(text='Incorrect format', bg='khaki1', fg='khaki1')
             lbl_incorrect_psw_entry.grid(row=1, column=2, sticky="w")
 
-    psw_len_value = psw_len_entry.get()
+    # второе поле, в которое должно быть введено число
+    psw_len_value = psw_len_entry.get().lower()
     if len(psw_len_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=2, column=2, sticky="w")
@@ -57,87 +64,105 @@ def clicked():
             lbl_incorrect_psw_len = Label(text='Incorrect format', bg='khaki1', fg='khaki1')
             lbl_incorrect_psw_len.grid(row=2, column=2, sticky="w")
 
-    is_numbers_value = is_numbers_entry.get()
+    # первое поле, в которое должно быть введено yes or no
+    is_numbers_value = is_numbers_entry.get().lower()
     if len(is_numbers_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=3, column=2, sticky="w")
     else:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='khaki1')
         lbl_empty_entry.grid(row=3, column=2, sticky="w")
-        if not yes_or_no(is_numbers_value):
+        if yes_or_no(is_numbers_value):
+            counter += 1
+            if "yes" in is_numbers_value:
+                password.extend(digits)
+        else:
             lbl_incorrect_numbers = Label(text='Incorrect format', bg='khaki1', fg='red')
             lbl_incorrect_numbers.grid(row=3, column=2, sticky="w")
-        if "yes" in is_numbers_value or "Yes" in is_numbers_value or "YES" in is_numbers_value:
-            password.extend(digits)
 
-    is_lowercase_letters_value = is_lowercase_letters_entry.get()
+    # второе поле, в которое должно быть введено yes or no
+    is_lowercase_letters_value = is_lowercase_letters_entry.get().lower()
     if len(is_lowercase_letters_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=4, column=2, sticky="w")
     else:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='khaki1')
         lbl_empty_entry.grid(row=4, column=2, sticky="w")
-        if not yes_or_no(is_lowercase_letters_value):
+        if yes_or_no(is_lowercase_letters_value):
+            counter += 1
+            if "yes" in is_lowercase_letters_value:
+                password.extend(lowercase_letters)
+        else:
             lbl_incorrect_lower = Label(text='Incorrect format', bg='khaki1', fg='red')
             lbl_incorrect_lower.grid(row=4, column=2, sticky="w")
-        if "yes" in is_lowercase_letters_value or "Yes" in is_lowercase_letters_value or "YES" in is_lowercase_letters_value:
-            password.extend(lowercase_letters)
 
-    is_uppercase_letters_value = is_uppercase_letters_entry.get()
+    # третье поле, в которое должно быть введено yes or no
+    is_uppercase_letters_value = is_uppercase_letters_entry.get().lower()
     if len(is_uppercase_letters_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=5, column=2, sticky="w")
     else:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='khaki1')
         lbl_empty_entry.grid(row=5, column=2, sticky="w")
-        if not yes_or_no(is_uppercase_letters_value):
+        if yes_or_no(is_uppercase_letters_value):
+            counter += 1
+            if "yes" in is_uppercase_letters_value:
+                password.extend(uppercase_letters)
+        else:
             lbl_incorrect_upper = Label(text='Incorrect format', bg='khaki1', fg='red')
             lbl_incorrect_upper.grid(row=5, column=2, sticky="w")
-        if "yes" in is_uppercase_letters_value or "Yes" in is_uppercase_letters_value or "YES" in is_uppercase_letters_value:
-            password.extend(uppercase_letters)
 
-    is_symbols_value = is_symbols_entry.get()
+    # четвертое поле, в которое должно быть введено yes or no
+    is_symbols_value = is_symbols_entry.get().lower()
     if len(is_symbols_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=6, column=2, sticky="w")
     else:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='khaki1')
         lbl_empty_entry.grid(row=6, column=2, sticky="w")
-        if not yes_or_no(is_symbols_value):
+        if yes_or_no(is_symbols_value):
+            counter += 1
+            if "yes" in is_symbols_value:
+                password.extend(punctuation)
+        else:
             lbl_incorrect_symbols = Label(text='Incorrect format', bg='khaki1', fg='red')
             lbl_incorrect_symbols.grid(row=6, column=2, sticky="w")
-        if "yes" in is_symbols_value or "Yes" in is_symbols_value or "YES" in is_symbols_value:
-            password.extend(punctuation)
 
-    ignore_another_symbols_value = ignore_another_symbols_entry.get()
+    # пятое поле, в которое должно быть введено yes or no. Игнорировать ли похожие символы?
+    ignore_another_symbols_value = ignore_another_symbols_entry.get().lower()
     if len(ignore_another_symbols_value) == 0:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='red')
         lbl_empty_entry.grid(row=7, column=2, sticky="w")
     else:
         lbl_empty_entry = Label(text='Should not be empty', bg='khaki1', fg='khaki1')
         lbl_empty_entry.grid(row=7, column=2, sticky="w")
-        if not yes_or_no(ignore_another_symbols_value):
+        if yes_or_no(ignore_another_symbols_value):
+            counter += 1
+            if "yes" in ignore_another_symbols_value:
+                for i in range(len(ambiguous_symbols)):
+                    if ambiguous_symbols[i] in password:
+                        password.remove(ambiguous_symbols[i])
+        else:
             lbl_incorrect_ambiguous_symbols = Label(text='Incorrect format', bg='khaki1', fg='red')
             lbl_incorrect_ambiguous_symbols.grid(row=7, column=2, sticky="w")
 
-    print(password)
     # генерация паролей происходит здесь
-    if "yes" in [is_symbols_value, is_uppercase_letters_value, is_lowercase_letters_value,
-                                   is_numbers_value]:
+    if counter == 5 and "yes" in [is_symbols_value, is_uppercase_letters_value, is_lowercase_letters_value, is_numbers_value]:
         for i in range(int(amount_of_psw_value)):
             final_psw = random.sample(password, int(psw_len_value))
             list.insert(END, ''.join(final_psw))
         list.grid(row=11, column=0)
 
-    if "no" in is_symbols_value and "no" in is_uppercase_letters_value and "no" in is_lowercase_letters_value \
-            and "no" in is_numbers_value:
+    # если во все поля введено no
+    if 'no' in is_symbols_value and 'no' in is_uppercase_letters_value and 'no' in is_lowercase_letters_value and 'no' \
+            in is_numbers_value:
         text = 'Password can`t be generated because you filled in '
         text2 = 'fields with "no".'
         list.insert(END, ''.join(text))
         list.insert(END, ''.join(text2))
         list.grid(row=11, column=0)
 
-
+# оформление пользовательского интерфейса
 window = Tk()
 window.title("Password Generator App")
 window.config(bg='khaki1')
